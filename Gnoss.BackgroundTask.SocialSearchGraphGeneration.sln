@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gnoss.BackgroundTask.SocialSearchGraphGeneration", "Gnoss.BackgroundTask.SocialSearchGraphGeneration\Gnoss.BackgroundTask.SocialSearchGraphGeneration.csproj", "{532966C2-8D27-4240-8A09-9469DD085B94}"
 EndProject
@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Es.Riam.Gnoss.UtilServicios
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Es.Riam.AbstractsOpen", "..\Gnoss.Commons\Es.Riam.AbstractsOpen\Es.Riam.AbstractsOpen.csproj", "{7161E960-986C-4A4F-B740-58277E4589F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Es.Riam.EnterpriseReplication", "..\Gnoss.Commons\Es.Riam.EnterpriseReplication\Es.Riam.EnterpriseReplication.csproj", "{D97B894A-3980-4D8D-97A8-64E3B16B42AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Es.Riam.OpenReplication", "..\Gnoss.Commons\Es.Riam.OpenReplication\Es.Riam.OpenReplication.csproj", "{89020DEC-5D33-4390-BC09-197AF9BECF18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,10 +107,10 @@ Global
 		{7161E960-986C-4A4F-B740-58277E4589F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7161E960-986C-4A4F-B740-58277E4589F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7161E960-986C-4A4F-B740-58277E4589F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D97B894A-3980-4D8D-97A8-64E3B16B42AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D97B894A-3980-4D8D-97A8-64E3B16B42AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D97B894A-3980-4D8D-97A8-64E3B16B42AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D97B894A-3980-4D8D-97A8-64E3B16B42AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89020DEC-5D33-4390-BC09-197AF9BECF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89020DEC-5D33-4390-BC09-197AF9BECF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89020DEC-5D33-4390-BC09-197AF9BECF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89020DEC-5D33-4390-BC09-197AF9BECF18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
