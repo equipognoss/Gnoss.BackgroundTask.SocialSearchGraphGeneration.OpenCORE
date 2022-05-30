@@ -33,7 +33,7 @@ socialsearchgraphgeneration:
      connectionType: "0"
      intervalo: "100"
     volumes:
-     - /home/$USER/docker_testing/logs/base_usuarios:/app/logs
+     - ./logs/socialsearchgraphgeneration:/app/logs
 ```
 
 Se pueden consultar los posibles valores de configuración de cada parámetro aquí: https://github.com/equipognoss/Gnoss.Platform.Deploy
