@@ -9,7 +9,7 @@ Configuración estandar de esta aplicación en el archivo docker-compose.yml:
 
 ```yml
 socialsearchgraphgeneration:
-    image: socialsearchgraphgeneration
+    image: gnoss/socialsearchgraphgeneration
     env_file: .env
     environment:
      virtuosoConnectionString_home: ${virtuosoConnectionString_home}
