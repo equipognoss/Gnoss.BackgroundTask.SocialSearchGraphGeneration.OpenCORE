@@ -1,3 +1,6 @@
+![](https://content.gnoss.ws/imagenes/proyectos/personalizacion/7e72bf14-28b9-4beb-82f8-e32a3b49d9d3/cms/logognossazulprincipal.png)
+
+
 # Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE
 
 Aplicación de segundo plano que se encarga de insertar en el grafo de búsqueda de cada usuario los triples de los mensajes que envía y recibe dentro de la plataforma.
