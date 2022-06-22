@@ -5,11 +5,16 @@
 
 Aplicación de segundo plano que se encarga de insertar en el grafo de búsqueda de cada usuario los triples de los mensajes que envía y recibe dentro de la plataforma.
 
+Este servicio está escuchando las siguientes colas: 
+
+* ColaTagsMensaje: En esta cola la Web notificará el envío de cualquier mensaje interno a través de la plataforma. 
+* ColaTagsComentarios: En esta cola la Web notificará la realización de un comentario al recurso de un usuario. 
+
 Configuración estandar de esta aplicación en el archivo docker-compose.yml: 
 
 ```yml
 socialsearchgraphgeneration:
-    image: gnoss/socialsearchgraphgeneration
+    image: gnoss/gnoss.backgroundtask.socialsearchgraphgeneration.opencore
     env_file: .env
     environment:
      virtuosoConnectionString_home: ${virtuosoConnectionString_home}
