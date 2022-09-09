@@ -3,6 +3,8 @@
 
 # Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE
 
+![](https://github.com/equipognoss/Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE/workflows/BuildSocialSearchGraphGeneration/badge.svg)
+
 Aplicación de segundo plano que se encarga de insertar en el grafo de búsqueda de cada usuario los triples de los mensajes que envía y recibe dentro de la plataforma.
 
 Este servicio está escuchando las siguientes colas: 
