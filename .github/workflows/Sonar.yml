@@ -26,8 +26,8 @@ jobs:
       - name: change folder
         run: |
           cd ..
-          mv Gnoss.BackgroundTask.Mail.OpenCORE/Gnoss.Commons Gnoss.Commons
-          cd Gnoss.BackgroundTask.Mail.OpenCORE
+          mv Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE/Gnoss.Commons Gnoss.Commons
+          cd Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
