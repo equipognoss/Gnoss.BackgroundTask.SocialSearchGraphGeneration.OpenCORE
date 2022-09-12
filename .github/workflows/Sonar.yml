@@ -21,12 +21,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: equipognoss/Gnoss.Commons.OpenCORE
-          path: ./Gnoss.Commons
+          path: ./commons
           ref: main
       - name: change folder
         run: |
           cd ..
-          mv Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE/Gnoss.Commons Gnoss.Commons
+          mv Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE/commons Gnoss.Commons
           cd Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
