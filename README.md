@@ -4,6 +4,14 @@
 # Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE
 
 ![](https://github.com/equipognoss/Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE/workflows/BuildSocialSearchGraphGeneration/badge.svg)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)(https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.Mail.OpenCORE)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=bugs)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
 
 Aplicación de segundo plano que se encarga de insertar en el grafo de búsqueda de cada usuario los triples de los mensajes que envía y recibe dentro de la plataforma.
 
