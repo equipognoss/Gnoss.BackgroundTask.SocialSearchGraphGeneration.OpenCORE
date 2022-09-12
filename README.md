@@ -4,7 +4,7 @@
 # Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE
 
 ![](https://github.com/equipognoss/Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE/workflows/BuildSocialSearchGraphGeneration/badge.svg)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)(https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.Mail.OpenCORE)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE&metric=bugs)](https://sonarcloud.io/summary/new_code?id=equipognoss_Gnoss.BackgroundTask.SocialSearchGraphGeneration.OpenCORE)
