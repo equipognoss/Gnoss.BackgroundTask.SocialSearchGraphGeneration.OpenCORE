@@ -41,6 +41,7 @@ using Es.Riam.Gnoss.Web.Controles.ParametroAplicacionGBD;
 using Es.Riam.Gnoss.UtilServiciosWeb;
 using Es.Riam.Gnoss.AD.EntityModel.Models.BASE;
 using Es.Riam.AbstractsOpen;
+using Es.Riam.Gnoss.Logica.Notificacion;
 
 namespace GnossServicioModuloBaseUsuarios
 {
@@ -140,8 +141,11 @@ namespace GnossServicioModuloBaseUsuarios
             {
                 VirtuosoAD virtuosoAD = scope.ServiceProvider.GetRequiredService<VirtuosoAD>();
                 LoggingService loggingService = scope.ServiceProvider.GetRequiredService<LoggingService>();
+                EntityContext entityContext = scope.ServiceProvider.GetRequiredService<EntityContext>();
+                RedisCacheWrapper redisCacheWrapper = scope.ServiceProvider.GetRequiredService<RedisCacheWrapper>();
+                ConfigService configService = scope.ServiceProvider.GetRequiredService<ConfigService>();
                 IServicesUtilVirtuosoAndReplication servicesUtilVirtuosoAndReplication = scope.ServiceProvider.GetRequiredService<IServicesUtilVirtuosoAndReplication>();
-
+                ComprobarTraza("SocialSearchGraphGeneration", entityContext, loggingService, redisCacheWrapper, configService, servicesUtilVirtuosoAndReplication);
                 try
                 {
                     ComprobarCancelacionHilo();
@@ -158,8 +162,6 @@ namespace GnossServicioModuloBaseUsuarios
 
                         filaCola = null;
 
-                        servicesUtilVirtuosoAndReplication.ConexionAfinidad = "";
-
                         ControladorConexiones.CerrarConexiones(false);
 
                     }
@@ -170,6 +172,10 @@ namespace GnossServicioModuloBaseUsuarios
                 {
                     loggingService.GuardarLogError(ex);
                     return false;
+                }
+                finally
+                {
+                    GuardarTraza(loggingService);
                 }
             }
         }
@@ -202,8 +208,11 @@ namespace GnossServicioModuloBaseUsuarios
             {
                 LoggingService loggingService = scope.ServiceProvider.GetRequiredService<LoggingService>();
                 VirtuosoAD virtuosoAD = scope.ServiceProvider.GetRequiredService<VirtuosoAD>();
+                EntityContext entityContext = scope.ServiceProvider.GetRequiredService<EntityContext>();
+                RedisCacheWrapper redisCacheWrapper = scope.ServiceProvider.GetRequiredService<RedisCacheWrapper>();
+                ConfigService configService = scope.ServiceProvider.GetRequiredService<ConfigService>();
                 IServicesUtilVirtuosoAndReplication servicesUtilVirtuosoAndReplication = scope.ServiceProvider.GetRequiredService<IServicesUtilVirtuosoAndReplication>();
-
+                ComprobarTraza("SocialSearchGraphGeneration", entityContext, loggingService, redisCacheWrapper, configService, servicesUtilVirtuosoAndReplication);
                 try
                 {
                     ComprobarCancelacionHilo();
@@ -220,8 +229,6 @@ namespace GnossServicioModuloBaseUsuarios
 
                         filaCola = null;
 
-                        servicesUtilVirtuosoAndReplication.ConexionAfinidad = "";
-
                         ControladorConexiones.CerrarConexiones(false);
 
                     }
@@ -232,6 +239,10 @@ namespace GnossServicioModuloBaseUsuarios
                 {
                     loggingService.GuardarLogError(ex);
                     return false;
+                }
+                finally
+                {
+                    GuardarTraza(loggingService);
                 }
             }
         }
@@ -264,8 +275,11 @@ namespace GnossServicioModuloBaseUsuarios
             {
                 LoggingService loggingService = scope.ServiceProvider.GetRequiredService<LoggingService>();
                 VirtuosoAD virtuosoAD = scope.ServiceProvider.GetRequiredService<VirtuosoAD>();
+                EntityContext entityContext = scope.ServiceProvider.GetRequiredService<EntityContext>();
+                RedisCacheWrapper redisCacheWrapper = scope.ServiceProvider.GetRequiredService<RedisCacheWrapper>();
+                ConfigService configService = scope.ServiceProvider.GetRequiredService<ConfigService>();
                 IServicesUtilVirtuosoAndReplication servicesUtilVirtuosoAndReplication = scope.ServiceProvider.GetRequiredService<IServicesUtilVirtuosoAndReplication>();
-
+                ComprobarTraza("SocialSearchGraphGeneration", entityContext, loggingService, redisCacheWrapper, configService, servicesUtilVirtuosoAndReplication);
                 try
                 {
                     ComprobarCancelacionHilo();
@@ -282,8 +296,6 @@ namespace GnossServicioModuloBaseUsuarios
 
                         filaCola = null;
 
-                        servicesUtilVirtuosoAndReplication.ConexionAfinidad = "";
-
                         ControladorConexiones.CerrarConexiones(false);
                     }
 
@@ -293,6 +305,10 @@ namespace GnossServicioModuloBaseUsuarios
                 {
                     loggingService.GuardarLogError(ex);
                     return false;
+                }
+                finally
+                {
+                    GuardarTraza(loggingService);
                 }
             }
         }
@@ -587,6 +603,8 @@ namespace GnossServicioModuloBaseUsuarios
                                     CorreoCN correoCN = new CorreoCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
                                     CorreoDS correoDS = correoCN.ObtenerCorreoPorID(id, new Guid(idfrom), null);
 
+                                    NotificacionCN notificacionCN = new NotificacionCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+
                                     CorreoDS.CorreoInternoRow filaCorreo = (CorreoDS.CorreoInternoRow)correoDS.CorreoInterno.Rows[0];
 
                                     GestionNotificaciones GestorNotificaciones = new GestionNotificaciones(new DataWrapperNotificacion(), loggingService, entityContext, mConfigService, servicesUtilVirtuosoAndReplication);
@@ -683,6 +701,8 @@ namespace GnossServicioModuloBaseUsuarios
                                             { }
                                         }
                                     }
+
+                                    notificacionCN.ActualizarNotificacion();
 
                                     correoCN.ActualizarCorreo(correoDS);
                                     entityContext.SaveChanges();
