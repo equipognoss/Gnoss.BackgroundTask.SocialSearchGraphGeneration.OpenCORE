@@ -1,3 +1,4 @@
+using Es.Riam.Gnoss.Elementos.Suscripcion;
 using Es.Riam.Gnoss.Servicios;
 using Es.Riam.Gnoss.Util.Configuracion;
 using Es.Riam.Gnoss.Util.General;
@@ -15,13 +16,15 @@ namespace Gnoss.BackgroundTask.SocialSearchGraphGeneration
 {
     public class SocialSearchGraphGenerationWorker : Worker
     {
-        private readonly ILogger<SocialSearchGraphGenerationWorker> _logger;
         private readonly ConfigService _configService;
+        private ILogger mlogger;
+        private ILoggerFactory mLoggerFactory;
 
-        public SocialSearchGraphGenerationWorker(ILogger<SocialSearchGraphGenerationWorker> logger, ConfigService configService, IServiceScopeFactory scopeFactory) : base(logger, scopeFactory)
+        public SocialSearchGraphGenerationWorker(ConfigService configService, IServiceScopeFactory scopeFactory, ILogger<SocialSearchGraphGenerationWorker> logger, ILoggerFactory loggerFactory) : base(logger, scopeFactory)
         {
-            _logger = logger;
             _configService = configService;
+            mlogger = logger;
+            mLoggerFactory = loggerFactory;
         }
 
         protected override List<ControladorServicioGnoss> ObtenerControladores()
@@ -41,7 +44,7 @@ namespace Gnoss.BackgroundTask.SocialSearchGraphGeneration
             }
 
             List<ControladorServicioGnoss> controladores = new List<ControladorServicioGnoss>();
-            controladores.Add(new SocialSearchController(ScopedFactory, _configService, replicacion, urlServicioEtiquetas));
+            controladores.Add(new SocialSearchController(ScopedFactory, _configService, replicacion, urlServicioEtiquetas, mLoggerFactory.CreateLogger<SocialSearchController>(), mLoggerFactory));
 
             return controladores;
         }

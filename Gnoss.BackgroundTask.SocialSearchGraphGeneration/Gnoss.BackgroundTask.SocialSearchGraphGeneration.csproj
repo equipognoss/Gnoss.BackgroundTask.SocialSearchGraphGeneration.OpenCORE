@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <UserSecretsId>dotnet-Gnoss.BackgroundTask.SocialSearchGraphGeneration-3888C187-766A-47DE-B0CA-5D467CA400D2</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<UserSecretsId>dotnet-Gnoss.BackgroundTask.SocialSearchGraphGeneration-3888C187-766A-47DE-B0CA-5D467CA400D2</UserSecretsId>
+		<ServerGarbageCollection>false</ServerGarbageCollection>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
-	  <PackageReference Include="Npgsql" Version="6.0.11" />
-	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.8" />
-	  <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.90" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.1" />
+		<PackageReference Include="Npgsql" Version="8.0.5" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+		<PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gnoss.Commons\Es.Riam.Gnoss.Servicios\Es.Riam.Gnoss.Servicios.csproj" />
     <ProjectReference Include="..\..\Gnoss.Commons\Es.Riam.Gnoss.Web.Controles\Es.Riam.Gnoss.Web.Controles.csproj" />
     <ProjectReference Include="..\..\Gnoss.Commons\Es.Riam.OpenReplication\Es.Riam.OpenReplication.csproj" />
+    <ProjectReference Include="..\..\Gnoss.Commons\Es.Riam.Open\Es.Riam.Open.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

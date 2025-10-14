@@ -42,6 +42,9 @@ using Es.Riam.Gnoss.UtilServiciosWeb;
 using Es.Riam.Gnoss.AD.EntityModel.Models.BASE;
 using Es.Riam.AbstractsOpen;
 using Es.Riam.Gnoss.Logica.Notificacion;
+using Es.Riam.Interfaces.InterfacesOpen;
+using Microsoft.Extensions.Logging;
+using Es.Riam.Gnoss.Elementos.Suscripcion;
 
 namespace GnossServicioModuloBaseUsuarios
 {
@@ -74,6 +77,8 @@ namespace GnossServicioModuloBaseUsuarios
         private RabbitMQClient mClienteRabbitMensajes;
         private RabbitMQClient mClienteRabbitComentarios;
         private RabbitMQClient mClienteRabbitSuscripciones;
+        private ILogger mlogger;
+        private ILoggerFactory mLoggerFactory;
 
         #endregion
 
@@ -85,11 +90,13 @@ namespace GnossServicioModuloBaseUsuarios
         /// <param name="pFicheroConfiguracionBD">Fichero de configuración de la base de datos</param>
         /// <param name="pCancellationToken">Token de cancelación para parar el servicio</param>
         /// <param name="pReplicacion">TRUE si hay que replicar en el servicio de replicación, False caso contrario</param>
-        public SocialSearchController(IServiceScopeFactory serviceScope, ConfigService configService, bool pReplicacion, string pUrlServicioEtiquetas)
-            : base(serviceScope, configService)
+        public SocialSearchController(IServiceScopeFactory serviceScope, ConfigService configService, bool pReplicacion, string pUrlServicioEtiquetas, ILogger<SocialSearchController> logger, ILoggerFactory loggerFactory)
+            : base(serviceScope, configService,logger,loggerFactory)
         {
             mReplicacion = pReplicacion;
             mUrlServicioEtiquetas = pUrlServicioEtiquetas;
+            mlogger = logger;
+            mLoggerFactory = loggerFactory;
         }
 
         #endregion
@@ -120,7 +127,7 @@ namespace GnossServicioModuloBaseUsuarios
                 RabbitMQClient.ReceivedDelegate funcionProcesarItem = new RabbitMQClient.ReceivedDelegate(ProcesarItemColaTagsMensaje);
                 RabbitMQClient.ShutDownDelegate funcionShutDown = new RabbitMQClient.ShutDownDelegate(OnShutDownColaMensajes);
 
-                mClienteRabbitMensajes = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, COLA_TAGS_MENSAJES, pLoggingService, mConfigService, EXCHANGE, COLA_TAGS_MENSAJES);
+                mClienteRabbitMensajes = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, COLA_TAGS_MENSAJES, pLoggingService, mConfigService, mLoggerFactory.CreateLogger<RabbitMQClient>(), mLoggerFactory, EXCHANGE, COLA_TAGS_MENSAJES);
 
                 try
                 {
@@ -130,7 +137,7 @@ namespace GnossServicioModuloBaseUsuarios
                 catch (Exception ex)
                 {
                     mReiniciarColaMensajes = true;
-                    pLoggingService.GuardarLogError(ex);
+                    pLoggingService.GuardarLogError(ex,mlogger);
                 }
             }
         }
@@ -170,7 +177,7 @@ namespace GnossServicioModuloBaseUsuarios
                 }
                 catch (Exception ex)
                 {
-                    loggingService.GuardarLogError(ex);
+                    loggingService.GuardarLogError(ex,mlogger);
                     return false;
                 }
                 finally
@@ -187,7 +194,7 @@ namespace GnossServicioModuloBaseUsuarios
                 RabbitMQClient.ReceivedDelegate funcionProcesarItem = new RabbitMQClient.ReceivedDelegate(ProcesarItemColaTagsComentarios);
                 RabbitMQClient.ShutDownDelegate funcionShutDown = new RabbitMQClient.ShutDownDelegate(OnShutDownColaSuscripciones);
 
-                mClienteRabbitComentarios = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, COLA_TAGS_COMENTARIOS, pLoggingService, mConfigService, EXCHANGE, COLA_TAGS_COMENTARIOS);
+                mClienteRabbitComentarios = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, COLA_TAGS_COMENTARIOS, pLoggingService, mConfigService, mLoggerFactory.CreateLogger<RabbitMQClient>(), mLoggerFactory, EXCHANGE, COLA_TAGS_COMENTARIOS);
 
                 try
                 {
@@ -197,7 +204,7 @@ namespace GnossServicioModuloBaseUsuarios
                 catch (Exception ex)
                 {
                     mReiniciarColaComentarios = true;
-                    pLoggingService.GuardarLogError(ex);
+                    pLoggingService.GuardarLogError(ex, mlogger);
                 }
             }
         }
@@ -237,7 +244,7 @@ namespace GnossServicioModuloBaseUsuarios
                 }
                 catch (Exception ex)
                 {
-                    loggingService.GuardarLogError(ex);
+                    loggingService.GuardarLogError(ex, mlogger);
                     return false;
                 }
                 finally
@@ -254,7 +261,7 @@ namespace GnossServicioModuloBaseUsuarios
                 RabbitMQClient.ReceivedDelegate funcionProcesarItem = new RabbitMQClient.ReceivedDelegate(ProcesarItemColaTagsSuscripciones);
                 RabbitMQClient.ShutDownDelegate funcionShutDown = new RabbitMQClient.ShutDownDelegate(OnShutDownColaComentarios);
 
-                mClienteRabbitSuscripciones = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, "ColaTagsSuscripciones", pLoggingService, mConfigService);
+                mClienteRabbitSuscripciones = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, "ColaTagsSuscripciones", pLoggingService, mConfigService, mLoggerFactory.CreateLogger<RabbitMQClient>(), mLoggerFactory);
 
                 try
                 {
@@ -264,7 +271,7 @@ namespace GnossServicioModuloBaseUsuarios
                 catch (Exception ex)
                 {
                     mReiniciarColaSuscripciones = true;
-                    pLoggingService.GuardarLogError(ex);
+                    pLoggingService.GuardarLogError(ex, mlogger);
                 }
             }
         }
@@ -303,7 +310,7 @@ namespace GnossServicioModuloBaseUsuarios
                 }
                 catch (Exception ex)
                 {
-                    loggingService.GuardarLogError(ex);
+                    loggingService.GuardarLogError(ex, mlogger);
                     return false;
                 }
                 finally
@@ -320,15 +327,15 @@ namespace GnossServicioModuloBaseUsuarios
         {
             DateTime siguienteBorrado = DateTime.Now;
             bool hayElementosPendientes = false;
-            ParametroAplicacionCN parametroApliCN = new ParametroAplicacionCN(pEntityContext, pLoggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+            ParametroAplicacionCN parametroApliCN = new ParametroAplicacionCN(pEntityContext, pLoggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<ParametroAplicacionCN>(), mLoggerFactory);
             //parametroApliCN.InicializarEntityContext();
             GestorParametroAplicacion gestorParametroAplicacion = new GestorParametroAplicacion();
             ParametroAplicacionGBD parametroAplicacionGBD = new ParametroAplicacionGBD(pLoggingService, pEntityContext, mConfigService);
             parametroAplicacionGBD.ObtenerConfiguracionGnoss(gestorParametroAplicacion);
             mUrlIntragnoss = gestorParametroAplicacion.ParametroAplicacion.Where(parametroApp => parametroApp.Parametro.Equals("UrlIntragnoss")).FirstOrDefault().Valor;
 
-            FacetaAD tablaDeConfiguracionCN = new FacetaAD(pLoggingService, pEntityContext, mConfigService, servicesUtilVirtuosoAndReplication);
-            FacetadoAD facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication);
+            FacetaAD tablaDeConfiguracionCN = new FacetaAD(pLoggingService, pEntityContext, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetaAD>(), mLoggerFactory);
+            FacetadoAD facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoAD>(), mLoggerFactory);
             facetadoAD.ServidoresGrafo = tablaDeConfiguracionCN.ObtenerConfiguracionGrafoConexion();
             tablaDeConfiguracionCN.Dispose();
 
@@ -505,7 +512,7 @@ namespace GnossServicioModuloBaseUsuarios
                 LoggingService loggingService = scope.ServiceProvider.GetRequiredService<LoggingService>();
                 VirtuosoAD virtuosoAD = scope.ServiceProvider.GetRequiredService<VirtuosoAD>();
                 IServicesUtilVirtuosoAndReplication servicesUtilVirtuosoAndReplication = scope.ServiceProvider.GetRequiredService<IServicesUtilVirtuosoAndReplication>();
-
+                IAvailableServices availableServices = scope.ServiceProvider.GetRequiredService<IAvailableServices>();
                 bool error = false;
 
                 try
@@ -536,12 +543,12 @@ namespace GnossServicioModuloBaseUsuarios
                             string idsusrec = "";
                             Dictionary<string, string> listaIdsEliminar = new Dictionary<string, string>();
 
-                            ActualizacionFacetadoCN actualizacionFacetadoCN = new ActualizacionFacetadoCN(mUrlIntragnoss, entityContext, loggingService, mConfigService, virtuosoAD, servicesUtilVirtuosoAndReplication);
+                            ActualizacionFacetadoCN actualizacionFacetadoCN = new ActualizacionFacetadoCN(mUrlIntragnoss, entityContext, loggingService, mConfigService, virtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<ActualizacionFacetadoCN>(), mLoggerFactory);
                             FacetaDS tConfiguracion = new FacetaDS();
 
                             //FacetadoAD facetadoAD = null;
 
-                            ProyectoCN proyectoCN = new ProyectoCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+                            ProyectoCN proyectoCN = new ProyectoCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<ProyectoCN>(), mLoggerFactory);
                             Guid proyid = ProyectoAD.MetaProyecto;
                             short estadoProy = 2;
                             if ((int)pFila["TablaBaseProyectoID"] != 0)
@@ -600,14 +607,14 @@ namespace GnossServicioModuloBaseUsuarios
                                 {
                                     int numCorreosDS = 0;
 
-                                    CorreoCN correoCN = new CorreoCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+                                    CorreoCN correoCN = new CorreoCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<CorreoCN>(), mLoggerFactory);
                                     CorreoDS correoDS = correoCN.ObtenerCorreoPorID(id, new Guid(idfrom), null);
 
-                                    NotificacionCN notificacionCN = new NotificacionCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+                                    NotificacionCN notificacionCN = new NotificacionCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<NotificacionCN>(), mLoggerFactory);
 
                                     CorreoDS.CorreoInternoRow filaCorreo = (CorreoDS.CorreoInternoRow)correoDS.CorreoInterno.Rows[0];
 
-                                    GestionNotificaciones GestorNotificaciones = new GestionNotificaciones(new DataWrapperNotificacion(), loggingService, entityContext, mConfigService, servicesUtilVirtuosoAndReplication);
+                                    GestionNotificaciones GestorNotificaciones = new GestionNotificaciones(new DataWrapperNotificacion(), loggingService, entityContext, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<GestionNotificaciones>(), mLoggerFactory);
 
                                     Guid CorreoID = filaCorreo.CorreoID;
                                     Guid Autor = filaCorreo.Autor;
@@ -618,11 +625,11 @@ namespace GnossServicioModuloBaseUsuarios
                                     string DestinatariosNombres = filaCorreo.DestinatariosNombres;
                                     Guid ConversacionID = filaCorreo.ConversacionID;
 
-                                    ProyectoCN proyCN = new ProyectoCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
-                                    GestionProyecto gestProy = new GestionProyecto(proyCN.ObtenerProyectoCargaLigeraPorID(ProyectoAD.MetaProyecto), loggingService, entityContext);
+                                    ProyectoCN proyCN = new ProyectoCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<ProyectoCN>(), mLoggerFactory);
+                                    GestionProyecto gestProy = new GestionProyecto(proyCN.ObtenerProyectoCargaLigeraPorID(ProyectoAD.MetaProyecto), loggingService, entityContext, mLoggerFactory.CreateLogger<GestionProyecto>(), mLoggerFactory);
                                     Proyecto Proyecto = gestProy.ListaProyectos[ProyectoAD.MetaProyecto];
 
-                                    IdentidadCN identCN = new IdentidadCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+                                    IdentidadCN identCN = new IdentidadCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<IdentidadCN>(), mLoggerFactory);
                                     List<Guid> listaAutor = new List<Guid>();
                                     listaAutor.Add(Autor);
                                     string nombreAutor = identCN.ObtenerNombresDeIdentidades(listaAutor)[Autor];
@@ -643,7 +650,7 @@ namespace GnossServicioModuloBaseUsuarios
                                                     DataWrapperIdentidad identidadesParticipantes = identCN.ObtenerIdentidadesPorID(identidadesGrupo, false);
                                                     GestionIdentidades gestIdentidades = new GestionIdentidades(identidadesParticipantes, loggingService, entityContext, mConfigService, servicesUtilVirtuosoAndReplication);
 
-                                                    PersonaCN personaCN = new PersonaCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+                                                    PersonaCN personaCN = new PersonaCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<PersonaCN>(), mLoggerFactory);
                                                     var perfiles = gestIdentidades.ListaPerfiles.Where(item => item.Value.PersonaID.HasValue);
                                                     if (perfiles.Any())
                                                     {
@@ -702,7 +709,7 @@ namespace GnossServicioModuloBaseUsuarios
                                         }
                                     }
 
-                                    notificacionCN.ActualizarNotificacion();
+                                    notificacionCN.ActualizarNotificacion(availableServices);
 
                                     correoCN.ActualizarCorreo(correoDS);
                                     entityContext.SaveChanges();
@@ -724,7 +731,7 @@ namespace GnossServicioModuloBaseUsuarios
 
                                 if (idfrom != Guid.Empty.ToString())
                                 {
-                                    IdentidadCN identidadCN = new IdentidadCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+                                    IdentidadCN identidadCN = new IdentidadCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<IdentidadCN>(), mLoggerFactory);
                                     GestionIdentidades gesdtorIden = new GestionIdentidades(identidadCN.ObtenerIdentidadPorID(new Guid(idfrom), false), loggingService, entityContext, mConfigService, servicesUtilVirtuosoAndReplication);
                                     identidadCN.Dispose();
                                     remitente = gesdtorIden.ListaIdentidades[new Guid(idfrom)].Nombre(new Guid(idfrom));
@@ -789,7 +796,7 @@ namespace GnossServicioModuloBaseUsuarios
                                 }
                                 catch (Exception ex)
                                 {
-                                    loggingService.GuardarLogError(ex);
+                                    loggingService.GuardarLogError(ex, mlogger);
                                 }
 
                                 //Inserto información del tipo
@@ -1117,13 +1124,13 @@ namespace GnossServicioModuloBaseUsuarios
                             if (!string.IsNullOrEmpty(tripletasMensajesTo) || !string.IsNullOrEmpty(tripletasMensajesFrom))
                             {
                                 //Enviamos una fila al servicio windows encargado del refresco de la caché para que muestre el mensaje que se ha recibido.
-                                BaseComunidadCN baseComunidadCN = new BaseComunidadCN(entityContext, loggingService, entityContextBase, mConfigService, servicesUtilVirtuosoAndReplication);
+                                BaseComunidadCN baseComunidadCN = new BaseComunidadCN(entityContext, loggingService, entityContextBase, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<BaseComunidadCN>(), mLoggerFactory);
 
                                 try
                                 {
                                     if (mConfigService.ExistRabbitConnection(RabbitMQClient.BD_SERVICIOS_WIN))
                                     {
-                                        baseComunidadCN.InsertarFilaColaRefrescoCacheEnRabbitMQ(ProyectoAD.MetaProyecto, TiposEventosRefrescoCache.CambiosBandejaDeMensajes, TipoBusqueda.Mensajes, pFila["Tags"].ToString());
+                                        baseComunidadCN.InsertarFilaColaRefrescoCacheEnRabbitMQ(ProyectoAD.MetaProyecto, TiposEventosRefrescoCache.CambiosBandejaDeMensajes, TipoBusqueda.Mensajes, pFila["Tags"].ToString(), availableServices);
                                     }
                                     else
                                     {
@@ -1132,7 +1139,7 @@ namespace GnossServicioModuloBaseUsuarios
                                 }
                                 catch (Exception ex)
                                 {
-                                    loggingService.GuardarLogError(ex, "Fallo al insertar en Rabbit, insertamos en la base de datos BASE, tabla colaRefrescoCache");
+                                    loggingService.GuardarLogError(ex, "Fallo al insertar en Rabbit, insertamos en la base de datos BASE, tabla colaRefrescoCache",mlogger);
                                     baseComunidadCN.InsertarFilaEnColaRefrescoCache(ProyectoAD.MetaProyecto, TiposEventosRefrescoCache.CambiosBandejaDeMensajes, TipoBusqueda.Mensajes, pFila["Tags"].ToString());
                                 }
 
@@ -1148,7 +1155,7 @@ namespace GnossServicioModuloBaseUsuarios
                                 {
                                     listaIdsEliminar.Add(idString, "");
                                 }
-                                LiveCN liveCN = new LiveCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication);
+                                LiveCN liveCN = new LiveCN(entityContext, loggingService, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<LiveCN>(), mLoggerFactory);
 
                                 foreach (string idperfil in idsperfil)
                                 {
@@ -1256,7 +1263,7 @@ namespace GnossServicioModuloBaseUsuarios
                     error = true;
 
                     string mensaje = "Excepción: " + exFila.ToString() + "\n\n\tTraza: " + exFila.StackTrace + "\n\nFila: " + pFila["OrdenEjecucion"];
-                    loggingService.GuardarLog("ERROR:  " + mensaje);
+                    loggingService.GuardarLog("ERROR:  " + mensaje,mlogger);
 
                     pFila["Estado"] = ((short)pFila["Estado"]) + 1; //Aumento en 1 el error, cuando llegue a 4 no se volverá a intentar
 
@@ -1293,7 +1300,7 @@ namespace GnossServicioModuloBaseUsuarios
             bool comentarioLeido = false;
             try
             {
-                facCN = new FacetadoCN(mUrlIntragnoss, "", pEntityContext, pLoggingService, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication);
+                facCN = new FacetadoCN(mUrlIntragnoss, "", pEntityContext, pLoggingService, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoCN>(), mLoggerFactory);
 
                 comentarioLeido = facCN.ComprobarSiComentarioNoExisteOHaSidoLeidoPerfil(pComentarioId, pUsuarioId);
             }
@@ -1309,7 +1316,7 @@ namespace GnossServicioModuloBaseUsuarios
                     Thread.Sleep(30 * 1000);
                 }
 
-                facCN = new FacetadoCN(mUrlIntragnoss, "", pEntityContext, pLoggingService, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication);
+                facCN = new FacetadoCN(mUrlIntragnoss, "", pEntityContext, pLoggingService, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoCN>(), mLoggerFactory);
                 comentarioLeido = facCN.ComprobarSiComentarioNoExisteOHaSidoLeidoPerfil(pComentarioId, pUsuarioId);
             }
             finally
@@ -1340,7 +1347,7 @@ namespace GnossServicioModuloBaseUsuarios
             FacetadoAD facetadoAD = null;
             try
             {
-                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pTablaReplica, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication);
+                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pTablaReplica, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoAD>(), mLoggerFactory);
                 facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
 
                 facetadoAD.InsertaTripletasConModify(pProyectoID, ptripletas, pListaElementosaModificarID);
@@ -1357,7 +1364,7 @@ namespace GnossServicioModuloBaseUsuarios
                     Thread.Sleep(30 * 1000);
                 }
 
-                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pTablaReplica, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication);
+                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pTablaReplica, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoAD>(), mLoggerFactory);
                 facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
                 facetadoAD.InsertaTripletasConModify(pProyectoID, ptripletas, pListaElementosaModificarID);
 
@@ -1374,7 +1381,7 @@ namespace GnossServicioModuloBaseUsuarios
             FacetadoAD facetadoAD = null;
             try
             {
-                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication);
+                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoAD>(), mLoggerFactory);
                 facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
 
                 facetadoAD.InsertaTripletas(pProyectoID, ptripletas, pPrioridad);
@@ -1391,7 +1398,7 @@ namespace GnossServicioModuloBaseUsuarios
                     Thread.Sleep(30 * 1000);
                 }
 
-                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication);
+                facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoAD>(), mLoggerFactory);
                 facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
                 facetadoAD.InsertaTripletas(pProyectoID, ptripletas, pPrioridad);
 
@@ -1536,7 +1543,7 @@ namespace GnossServicioModuloBaseUsuarios
 
         protected override ControladorServicioGnoss ClonarControlador()
         {
-            SocialSearchController controlador = new SocialSearchController(ScopedFactory, mConfigService, mReplicacion, mUrlServicioEtiquetas);
+            SocialSearchController controlador = new SocialSearchController(ScopedFactory, mConfigService, mReplicacion, mUrlServicioEtiquetas, mLoggerFactory.CreateLogger<SocialSearchController>(), mLoggerFactory);
             return controlador;
         }
 
