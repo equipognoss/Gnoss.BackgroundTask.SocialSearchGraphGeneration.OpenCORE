@@ -87,9 +87,9 @@ namespace GnossServicioModuloBaseUsuarios
         /// <summary>
         /// Constructor de la clase
         /// </summary>
-        /// <param name="pFicheroConfiguracionBD">Fichero de configuración de la base de datos</param>
-        /// <param name="pCancellationToken">Token de cancelación para parar el servicio</param>
-        /// <param name="pReplicacion">TRUE si hay que replicar en el servicio de replicación, False caso contrario</param>
+        /// <param name="pFicheroConfiguracionBD">Fichero de configuraciï¿½n de la base de datos</param>
+        /// <param name="pCancellationToken">Token de cancelaciï¿½n para parar el servicio</param>
+        /// <param name="pReplicacion">TRUE si hay que replicar en el servicio de replicaciï¿½n, False caso contrario</param>
         public SocialSearchController(IServiceScopeFactory serviceScope, ConfigService configService, bool pReplicacion, string pUrlServicioEtiquetas, ILogger<SocialSearchController> logger, ILoggerFactory loggerFactory)
             : base(serviceScope, configService,logger,loggerFactory)
         {
@@ -127,6 +127,7 @@ namespace GnossServicioModuloBaseUsuarios
                 RabbitMQClient.ReceivedDelegate funcionProcesarItem = new RabbitMQClient.ReceivedDelegate(ProcesarItemColaTagsMensaje);
                 RabbitMQClient.ShutDownDelegate funcionShutDown = new RabbitMQClient.ShutDownDelegate(OnShutDownColaMensajes);
 
+                mClienteRabbitMensajes?.Dispose();
                 mClienteRabbitMensajes = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, COLA_TAGS_MENSAJES, pLoggingService, mConfigService, mLoggerFactory.CreateLogger<RabbitMQClient>(), mLoggerFactory, EXCHANGE, COLA_TAGS_MENSAJES);
 
                 try
@@ -194,6 +195,7 @@ namespace GnossServicioModuloBaseUsuarios
                 RabbitMQClient.ReceivedDelegate funcionProcesarItem = new RabbitMQClient.ReceivedDelegate(ProcesarItemColaTagsComentarios);
                 RabbitMQClient.ShutDownDelegate funcionShutDown = new RabbitMQClient.ShutDownDelegate(OnShutDownColaSuscripciones);
 
+                mClienteRabbitComentarios?.Dispose();
                 mClienteRabbitComentarios = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, COLA_TAGS_COMENTARIOS, pLoggingService, mConfigService, mLoggerFactory.CreateLogger<RabbitMQClient>(), mLoggerFactory, EXCHANGE, COLA_TAGS_COMENTARIOS);
 
                 try
@@ -261,6 +263,7 @@ namespace GnossServicioModuloBaseUsuarios
                 RabbitMQClient.ReceivedDelegate funcionProcesarItem = new RabbitMQClient.ReceivedDelegate(ProcesarItemColaTagsSuscripciones);
                 RabbitMQClient.ShutDownDelegate funcionShutDown = new RabbitMQClient.ShutDownDelegate(OnShutDownColaComentarios);
 
+                mClienteRabbitSuscripciones?.Dispose();
                 mClienteRabbitSuscripciones = new RabbitMQClient(RabbitMQClient.BD_SERVICIOS_WIN, "ColaTagsSuscripciones", pLoggingService, mConfigService, mLoggerFactory.CreateLogger<RabbitMQClient>(), mLoggerFactory);
 
                 try
@@ -321,9 +324,9 @@ namespace GnossServicioModuloBaseUsuarios
         }
 
         /// <summary>
-        /// Realiza el mantenimiento del módulo BASE
+        /// Realiza el mantenimiento del mï¿½dulo BASE
         /// </summary>
-        public override void RealizarMantenimiento(EntityContext pEntityContext, EntityContextBASE pEntityContextBASE, UtilidadesVirtuoso pUtilidadesVirtuoso, LoggingService pLoggingService, RedisCacheWrapper pRedisCacheWrapper, GnossCache pGnossCache, VirtuosoAD pVirtuosoAD, IServicesUtilVirtuosoAndReplication servicesUtilVirtuosoAndReplication)
+        public override void RealizarMantenimiento(EntityContext pEntityContext, EntityContextBASE pEntityContextBASE, UtilidadesVirtuoso pUtilidadesVirtuoso, LoggingService pLoggingService, RedisCacheWrapper pRedisCacheWrapper, GnossCache pGnossCache, IServicesUtilVirtuosoAndReplication servicesUtilVirtuosoAndReplication)
         {
             DateTime siguienteBorrado = DateTime.Now;
             bool hayElementosPendientes = false;
@@ -335,8 +338,6 @@ namespace GnossServicioModuloBaseUsuarios
             mUrlIntragnoss = gestorParametroAplicacion.ParametroAplicacion.Where(parametroApp => parametroApp.Parametro.Equals("UrlIntragnoss")).FirstOrDefault().Valor;
 
             FacetaAD tablaDeConfiguracionCN = new FacetaAD(pLoggingService, pEntityContext, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetaAD>(), mLoggerFactory);
-            FacetadoAD facetadoAD = new FacetadoAD("home", mUrlIntragnoss, pLoggingService, pEntityContext, mConfigService, pVirtuosoAD, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<FacetadoAD>(), mLoggerFactory);
-            facetadoAD.ServidoresGrafo = tablaDeConfiguracionCN.ObtenerConfiguracionGrafoConexion();
             tablaDeConfiguracionCN.Dispose();
 
             #region Establezco el dominio de la cache
@@ -361,12 +362,12 @@ namespace GnossServicioModuloBaseUsuarios
 
         #region privados
 
-        #region Manipulación de relaciones de tags
+        #region Manipulaciï¿½n de relaciones de tags
 
         /// <summary>
         /// Procesa las filas de blogs
         /// </summary>
-        /// <returns>Verdad si ha habido algún error</returns>
+        /// <returns>Verdad si ha habido algï¿½n error</returns>
         private bool ProcesarFilasDeColaDeInvitaciones()
         {
             bool error = false;
@@ -388,7 +389,7 @@ namespace GnossServicioModuloBaseUsuarios
         /// <summary>
         /// Procesa las filas de suscripciones
         /// </summary>
-        /// <returns>Verdad si ha habido algún error</returns>
+        /// <returns>Verdad si ha habido algï¿½n error</returns>
         private bool ProcesarFilasDeColaDeSuscripciones()
         {
             bool error = false;
@@ -410,7 +411,7 @@ namespace GnossServicioModuloBaseUsuarios
         /// <summary>
         /// Procesa las filas de blogs
         /// </summary>
-        /// <returns>Verdad si ha habido algún error</returns>
+        /// <returns>Verdad si ha habido algï¿½n error</returns>
         private bool ProcesarFilasDeColaDeMensajes()
         {
             bool error = false;
@@ -432,7 +433,7 @@ namespace GnossServicioModuloBaseUsuarios
         /// <summary>
         /// Procesa las filas de blogs
         /// </summary>
-        /// <returns>Verdad si ha habido algún error</returns>
+        /// <returns>Verdad si ha habido algï¿½n error</returns>
         private bool ProcesarFilasDeColaDeComentarios()
         {
             bool error = false;
@@ -454,7 +455,7 @@ namespace GnossServicioModuloBaseUsuarios
         /// <summary>
         /// Procesa las filas de contactos
         /// </summary>
-        /// <returns>Verdad si ha habido algún error</returns>
+        /// <returns>Verdad si ha habido algï¿½n error</returns>
         private bool ProcesarFilasDeColaDeContactos()
         {
             bool error = false;
@@ -501,7 +502,7 @@ namespace GnossServicioModuloBaseUsuarios
         /// Procesa una fila de la cola, calcula sus tags y actualiza la Base de Datos del modelo BASE
         /// </summary>
         /// <param name="pFila">Fila de cola a procesar</param>
-        /// <returns>Verdad si ha habido algun error durante la operación</returns>
+        /// <returns>Verdad si ha habido algun error durante la operaciï¿½n</returns>
         private bool ProcesarFilaDeCola(DataRow pFila)
         {
             using (var scope = ScopedFactory.CreateScope())
@@ -572,7 +573,7 @@ namespace GnossServicioModuloBaseUsuarios
 
                             if (pFila.Table.DataSet is BaseMensajesDS)
                             {
-                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciónMasterHome", mReplicacion);
+                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciï¿½nMasterHome", mReplicacion);
                                 //facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
 
                                 ficheroConfiguracion = mFicheroConfiguracionHomeBD;
@@ -598,7 +599,7 @@ namespace GnossServicioModuloBaseUsuarios
                                     }
                                     else
                                     {
-                                        //Los añado en la lista, asi si estan en un grupo, no les mando el mensajes dos veces
+                                        //Los aï¿½ado en la lista, asi si estan en un grupo, no les mando el mensajes dos veces
                                         listaParticipantesGrupos.Add(new Guid(idTo));
                                     }
                                 }
@@ -799,7 +800,7 @@ namespace GnossServicioModuloBaseUsuarios
                                     loggingService.GuardarLogError(ex, mlogger);
                                 }
 
-                                //Inserto información del tipo
+                                //Inserto informaciï¿½n del tipo
                                 tripletasMensajesFrom += FacetadoAD.GenerarTripleta("<http://gnoss/" + idString + ">",
                                  "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
                                  "\"Mensaje\"");
@@ -809,7 +810,7 @@ namespace GnossServicioModuloBaseUsuarios
                                  "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
                                  "\"Mensaje\"");
 
-                                //obtenemos información extra para los destinatarios
+                                //obtenemos informaciï¿½n extra para los destinatarios
                                 actualizacionFacetadoCN.ObtieneInformacionExtraMensajesTo(tConfiguracion, idString, idsTo[0]);
                                 foreach (DataRow myrow in tConfiguracion.Tables["TripletasMensajesTo"].Rows)
                                 {
@@ -818,7 +819,7 @@ namespace GnossServicioModuloBaseUsuarios
                                     tripletasMensajesTo += FacetadoAD.GenerarTripleta((string)myrow[0], predicado, objeto);
                                 }
                                 tConfiguracion.Clear();
-                                //obtenemos información extra para los remitentes
+                                //obtenemos informaciï¿½n extra para los remitentes
                                 actualizacionFacetadoCN.ObtieneInformacionExtraMensajesFrom(tConfiguracion, idString, idfrom);
 
                                 foreach (DataRow myrow in tConfiguracion.Tables["tripletasMensajesFrom"].Rows)
@@ -828,7 +829,7 @@ namespace GnossServicioModuloBaseUsuarios
                                 }
                                 tConfiguracion.Clear();
 
-                                //obtenemos información extra para los remitentes sobre los destinatarios
+                                //obtenemos informaciï¿½n extra para los remitentes sobre los destinatarios
                                 actualizacionFacetadoCN.ObtieneInformacionExtraMensajesFromObtenerTo(tConfiguracion, idString, idfrom);
                                 foreach (DataRow myrow in tConfiguracion.Tables["TripletasMensajesFromObtenerTo"].Rows)
                                 {
@@ -861,7 +862,7 @@ namespace GnossServicioModuloBaseUsuarios
                             }
                             else if (pFila.Table.DataSet is BaseSuscripcionesDS)
                             {
-                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciónMasterHome", mReplicacion);
+                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciï¿½nMasterHome", mReplicacion);
                                 //facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
 
                                 ficheroConfiguracion = mFicheroConfiguracionHomeBD;
@@ -896,10 +897,10 @@ namespace GnossServicioModuloBaseUsuarios
 
                                 tConfiguracion.Clear();
 
-                                //Inserto información del tipo
+                                //Inserto informaciï¿½n del tipo
                                 tripletasSuscripciones += FacetadoAD.GenerarTripleta(sujeto, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>", "\"Suscripcion\"");
 
-                                //obtenemos información extra para los destinatarios
+                                //obtenemos informaciï¿½n extra para los destinatarios
                                 List<QueryTriples> listaInformacionExtraSuscriptores = actualizacionFacetadoCN.ObtieneInformacionExtraSuscripciones(id, new Guid(idsusrec));
 
                                 foreach (QueryTriples query in listaInformacionExtraSuscriptores)
@@ -913,7 +914,7 @@ namespace GnossServicioModuloBaseUsuarios
                             }
                             else if (pFila.Table.DataSet is BaseInvitacionesDS)
                             {
-                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciónMasterHome", mReplicacion);
+                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciï¿½nMasterHome", mReplicacion);
                                 //facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
 
                                 ficheroConfiguracion = mFicheroConfiguracionHomeBD;
@@ -925,12 +926,12 @@ namespace GnossServicioModuloBaseUsuarios
                                 id = new Guid(idString);
                                 iddesinv = listaTagsFiltros[(short)TiposTags.IDTagInvitacionIdDestino][0].ToUpper();
 
-                                //Inserto información del tipo
+                                //Inserto informaciï¿½n del tipo
                                 tripletasInvitaciones += FacetadoAD.GenerarTripleta("<http://gnoss/" + idString + ">",
                                  "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
                                  "\"Invitacion\"");
 
-                                //obtenemos información extra para los destinatarios
+                                //obtenemos informaciï¿½n extra para los destinatarios
                                 List<QueryTriples> listaInformacionExtraInvitaciones = actualizacionFacetadoCN.ObtieneInformacionExtraInvitaciones(idString);
 
                                 foreach (QueryTriples query in listaInformacionExtraInvitaciones)
@@ -943,7 +944,7 @@ namespace GnossServicioModuloBaseUsuarios
                             }
                             else if (pFila.Table.DataSet is BaseComentariosDS)
                             {
-                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciónMasterHome", mReplicacion);
+                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionHomeBD, false, mUrlIntragnoss, "ColaReplicaciï¿½nMasterHome", mReplicacion);
                                 //facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
 
                                 ficheroConfiguracion = mFicheroConfiguracionHomeBD;
@@ -965,12 +966,12 @@ namespace GnossServicioModuloBaseUsuarios
                                 //tags etiquetas descompuestos titulo
                                 tripletasComentarios += UtilidadesVirtuoso.AgregarTripletasDescompuestasTitulo(id.ToString(), "<http://gnoss/hasTagDesc>", titulo);
 
-                                //Inserto información del tipo
+                                //Inserto informaciï¿½n del tipo
                                 tripletasComentarios += FacetadoAD.GenerarTripleta("<http://gnoss/" + idString + ">",
                                  "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
                                  "\"Comentario\"");
 
-                                //obtenemos información extra para los destinatarios
+                                //obtenemos informaciï¿½n extra para los destinatarios
                                 List<QueryTriples> listaTripletasComentarios = actualizacionFacetadoCN.ObtieneInformacionExtraComentarios(id);
 
                                 foreach (QueryTriples query in listaTripletasComentarios)
@@ -984,7 +985,7 @@ namespace GnossServicioModuloBaseUsuarios
                             }
                             else if (pFila.Table.DataSet is BaseContactosDS)
                             {
-                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionBD, false, mUrlIntragnoss, "ColaReplicaciónMasterHome", mReplicacion);
+                                //facetadoAD = new FacetadoAD(mFicheroConfiguracionBD, false, mUrlIntragnoss, "ColaReplicaciï¿½nMasterHome", mReplicacion);
                                 //facetadoAD.CadenaConexionBase = this.mFicheroConfiguracionBDBase;
 
                                 ficheroConfiguracion = mFicheroConfiguracionBD;
@@ -1003,7 +1004,7 @@ namespace GnossServicioModuloBaseUsuarios
 
                                 valorSearch += " " + UtilCadenas.EliminarHtmlDeTextoPorEspacios(titulo);
 
-                                //obtenemos información extra de amigos
+                                //obtenemos informaciï¿½n extra de amigos
                                 actualizacionFacetadoCN.ObtieneInformacionExtraContactos(idString, idamigo);
 
                                 foreach (DataRow myrow in tConfiguracion.Tables["TripletasContactos"].Rows)
@@ -1050,7 +1051,7 @@ namespace GnossServicioModuloBaseUsuarios
                                 {
                                     listaIdsEliminar.Add(idString, "");
                                 }
-                                //Inserto información de la identidad
+                                //Inserto informaciï¿½n de la identidad
                                 tripletasMensajesFrom += FacetadoAD.GenerarTripleta("<http://gnoss/" + idString + ">",
                                  "<http://gnoss/IdentidadID>",
                                  "<http://gnoss/" + idfrom.ToUpper() + ">");
@@ -1077,7 +1078,7 @@ namespace GnossServicioModuloBaseUsuarios
                                 }
 
                                 foreach (string idTo in idsTo)
-                                {   //Inserto información de la identidad
+                                {   //Inserto informaciï¿½n de la identidad
                                     String mTripletasMensajesToAux = tripletasMensajesTo + FacetadoAD.GenerarTripleta("<http://gnoss/" + id.ToString().ToUpper() + ">",
                                      "<http://gnoss/IdentidadID>",
                                       "<http://gnoss/" + idTo.ToUpper() + ">");
@@ -1120,10 +1121,10 @@ namespace GnossServicioModuloBaseUsuarios
                                 }
                             }
 
-                            //Una vez se ha insertado en virtuoso los datos de los destinatarios y los que reciben el mensaje, inserto en la cola refrescocaché.
+                            //Una vez se ha insertado en virtuoso los datos de los destinatarios y los que reciben el mensaje, inserto en la cola refrescocachï¿½.
                             if (!string.IsNullOrEmpty(tripletasMensajesTo) || !string.IsNullOrEmpty(tripletasMensajesFrom))
                             {
-                                //Enviamos una fila al servicio windows encargado del refresco de la caché para que muestre el mensaje que se ha recibido.
+                                //Enviamos una fila al servicio windows encargado del refresco de la cachï¿½ para que muestre el mensaje que se ha recibido.
                                 BaseComunidadCN baseComunidadCN = new BaseComunidadCN(entityContext, loggingService, entityContextBase, mConfigService, servicesUtilVirtuosoAndReplication, mLoggerFactory.CreateLogger<BaseComunidadCN>(), mLoggerFactory);
 
                                 try
@@ -1173,7 +1174,7 @@ namespace GnossServicioModuloBaseUsuarios
 
                                     // ***************************************************************
                                     //Si es un comentario nuevo, aumentar el contador
-                                    //Si es un comentario editado y el perfil no ha leído el comentario todavía, aumentar el contador
+                                    //Si es un comentario editado y el perfil no ha leï¿½do el comentario todavï¿½a, aumentar el contador
                                     if (ComentarioNoExisteOHaSidoLeidoPerfil_ControlCheckPoint(entityContext, loggingService, virtuosoAD, idString, usuario, servicesUtilVirtuosoAndReplication))
                                     {
                                         liveCN.AumentarContadorNuevosComentarios(new Guid(idperfil));
@@ -1246,7 +1247,7 @@ namespace GnossServicioModuloBaseUsuarios
 
                             #endregion
 
-                            ////Actualización del índice SEARCH.
+                            ////Actualizaciï¿½n del ï¿½ndice SEARCH.
                             //if (!string.IsNullOrEmpty(valorSearch))
                             //{
                             //    UtilidadesVirtuoso.ActualizarIndiceSearch_ControlCheckPoint(ficheroConfiguracion, mFicheroConfiguracionBDBase, mUrlIntragnoss, tablaReplica);
@@ -1259,15 +1260,15 @@ namespace GnossServicioModuloBaseUsuarios
                 catch (Exception exFila)
                 {
                     ControladorConexiones.CerrarConexiones();
-                    //Ha habido algún error durante la operación, notifico el error
+                    //Ha habido algï¿½n error durante la operaciï¿½n, notifico el error
                     error = true;
 
-                    string mensaje = "Excepción: " + exFila.ToString() + "\n\n\tTraza: " + exFila.StackTrace + "\n\nFila: " + pFila["OrdenEjecucion"];
+                    string mensaje = "Excepciï¿½n: " + exFila.ToString() + "\n\n\tTraza: " + exFila.StackTrace + "\n\nFila: " + pFila["OrdenEjecucion"];
                     loggingService.GuardarLog("ERROR:  " + mensaje,mlogger);
 
-                    pFila["Estado"] = ((short)pFila["Estado"]) + 1; //Aumento en 1 el error, cuando llegue a 4 no se volverá a intentar
+                    pFila["Estado"] = ((short)pFila["Estado"]) + 1; //Aumento en 1 el error, cuando llegue a 4 no se volverï¿½ a intentar
 
-                    // Se envía al visor de sucesos una notificación
+                    // Se envï¿½a al visor de sucesos una notificaciï¿½n
                     try
                     {
                         string sSource;
@@ -1309,7 +1310,7 @@ namespace GnossServicioModuloBaseUsuarios
                 //Cerramos las conexiones
                 ControladorConexiones.CerrarConexiones();
 
-                //Realizamos una consulta ask a virtuoso para comprobar si está funcionando
+                //Realizamos una consulta ask a virtuoso para comprobar si estï¿½ funcionando
                 while (!pVirtuosoAD.ServidorOperativo())
                 {
                     //Dormimos 30 segundos
@@ -1357,7 +1358,7 @@ namespace GnossServicioModuloBaseUsuarios
                 //Cerramos las conexiones
                 ControladorConexiones.CerrarConexiones();
 
-                //Realizamos una consulta ask a virtuoso para comprobar si está funcionando
+                //Realizamos una consulta ask a virtuoso para comprobar si estï¿½ funcionando
                 while (!pVirtuosoAD.ServidorOperativo())
                 {
                     //Dormimos 30 segundos
@@ -1391,7 +1392,7 @@ namespace GnossServicioModuloBaseUsuarios
                 //Cerramos las conexiones
                 ControladorConexiones.CerrarConexiones();
 
-                //Realizamos una consulta ask a virtuoso para comprobar si está funcionando
+                //Realizamos una consulta ask a virtuoso para comprobar si estï¿½ funcionando
                 while (!pVirtuosoAD.ServidorOperativo())
                 {
                     //Dormimos 30 segundos
@@ -1458,7 +1459,7 @@ namespace GnossServicioModuloBaseUsuarios
             }
             else if (pDataSet is BaseInvitacionesDS)
             {
-                //InvitaciónID
+                //Invitaciï¿½nID
                 listaTagsFiltros.Add((short)TiposTags.IDTagInvitacion, BuscarTagFiltroEnCadena(ref pTags, Constantes.ID_INVITACION));
 
                 //Identidad del destino de la invitacion
@@ -1529,7 +1530,7 @@ namespace GnossServicioModuloBaseUsuarios
 
         #endregion
 
-        #region Actualización de la BD
+        #region Actualizaciï¿½n de la BD
 
         
 
@@ -1539,7 +1540,7 @@ namespace GnossServicioModuloBaseUsuarios
 
         #endregion
 
-        #region Métodos sobreescritos
+        #region Mï¿½todos sobreescritos
 
         protected override ControladorServicioGnoss ClonarControlador()
         {
